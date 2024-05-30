@@ -6,7 +6,7 @@ const exchangeRates = ref([]);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('/api/exchange-rates');
+    const response = await axios.get('http://localhost:8080/api/exchange-rates');
     exchangeRates.value = response.data;
   } catch (error) {
     console.error("Error fetching exchange rates:", error);
