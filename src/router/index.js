@@ -15,9 +15,9 @@ const router = createRouter({
       component: () => import('../views/ExchangeRateHistoryView.vue')
     },
     {
-      path: '/calculator',
-      name: 'calculator',
-      component: () => import('../views/CalculatorView.vue')
+      path: '/converter',
+      name: 'converter',
+      component: () => import('../views/ConverterView.vue')
     }
   ]
 })
