@@ -10,7 +10,7 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/history',
+      path: '/history/:currency',
       name: 'history',
       component: () => import('../views/ExchangeRateHistoryView.vue')
     },

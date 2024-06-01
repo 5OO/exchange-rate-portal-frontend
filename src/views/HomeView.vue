@@ -17,9 +17,9 @@ onMounted(async () => {
 <template>
   <main class="container mt-5">
     <h1 class="mb-4">Exchange Rates</h1>
-    <p>Listing of the exchange rates of the one euro against foreign currencies of the European Central Bank.</p>
-    <p>The latest date of the published exchange rate is displayed.</p>
-    <p> For exchange rate history display click on respective currency link.</p>
+    <p>
+      The most recent exchange rates of the euro against foreign currencies are displayed below. For historical exchange rates, click on the respective currency link.
+    </p>
     <div v-if="exchangeRates.length">
       <table class="table table-striped">
         <thead>
@@ -31,7 +31,9 @@ onMounted(async () => {
         </thead>
         <tbody>
         <tr v-for="rate in exchangeRates" :key="rate.id">
-          <td>{{ rate.currency }}</td>
+          <td>
+            <RouterLink :to="{ name: 'history', params: { currency: rate.currency } }">{{ rate.currency }}</RouterLink>
+          </td>
           <td>{{ rate.rate }}</td>
           <td>{{ rate.date }}</td>
         </tr>
