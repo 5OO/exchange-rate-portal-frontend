@@ -22,6 +22,11 @@ onMounted(async () => {
     console.error("Error fetching exchange rates history:", error);
   }
 });
+
+
+function formatRate(rate) {
+  return rate.toFixed(4); // Adjust the number of decimal places as needed
+}
 </script>
 
 <template>
@@ -44,7 +49,7 @@ onMounted(async () => {
         <tr v-for="rate in exchangeRates" :key="rate.date">
           <td>{{ rate.date }}</td>
           <td>{{ rate.currency }}</td>
-          <td>{{ rate.rate }}</td>
+          <td>{{ formatRate(rate.rate) }}</td>
           <td>{{ rate.currencyName }}</td>
         </tr>
         </tbody>
