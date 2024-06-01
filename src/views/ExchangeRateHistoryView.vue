@@ -8,11 +8,20 @@ const currency = route.params.currency;
 const exchangeRates = ref([]);
 const currencyName = ref('');
 const currencyLocation = ref('');
+const currentPage = ref(0);
+const pageSize = ref(250);
+const totalPages = ref(0);
 
-onMounted(async () => {
+const fetchRates = async (page, size) => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/exchange-rates/history/${currency}`);
-    exchangeRates.value = response.data;
+    const response = await axios.get(`http://localhost:8080/api/exchange-rates/history/${currency}`, {
+      params: {
+        page,
+        size
+      }
+    });
+    exchangeRates.value = response.data.content;
+    totalPages.value = response.data.totalPages;
 
     if (exchangeRates.value.length > 0) {
       currencyName.value = exchangeRates.value[0].currencyName;
@@ -21,12 +30,22 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error fetching exchange rates history:", error);
   }
+};
+
+onMounted(() => {
+  fetchRates(currentPage.value, pageSize.value);
 });
 
+const goToPage = (page) => {
+  if (page >= 0 && page < totalPages.value) {
+    currentPage.value = page;
+    fetchRates(currentPage.value, pageSize.value);
+  }
+};
 
-function formatRate(rate) {
-  return rate.toFixed(4); // Adjust the number of decimal places as needed
-}
+const formatRate = (rate) => {
+  return rate.toFixed(4);
+};
 </script>
 
 <template>
@@ -54,6 +73,11 @@ function formatRate(rate) {
         </tr>
         </tbody>
       </table>
+      <div class="pagination">
+        <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 0">Previous</button>
+        <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+        <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages - 1">Next</button>
+      </div>
     </div>
     <div v-else>
       <p>Loading exchange rates history...</p>
@@ -62,5 +86,30 @@ function formatRate(rate) {
 </template>
 
 <style>
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
+
+.pagination button {
+  margin: 0 5px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+}
 </style>
