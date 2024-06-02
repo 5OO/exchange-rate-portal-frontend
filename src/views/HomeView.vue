@@ -25,6 +25,8 @@ onMounted(async () => {
         <thead>
         <tr>
           <th scope="col">Currency</th>
+          <th scope="col">Currency Name</th>
+          <th scope="col">Location</th>
           <th scope="col">Rate</th>
           <th scope="col">Date</th>
         </tr>
@@ -34,6 +36,8 @@ onMounted(async () => {
           <td>
             <RouterLink :to="{ name: 'history', params: { currency: rate.currency } }">{{ rate.currency }}</RouterLink>
           </td>
+          <td>{{ rate.currencyName }}</td>
+          <td>{{ rate.entityLocation }}</td>
           <td>{{ rate.rate }}</td>
           <td>{{ rate.date }}</td>
         </tr>
