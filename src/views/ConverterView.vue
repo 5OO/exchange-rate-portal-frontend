@@ -1,8 +1,20 @@
 <script setup>
-import { ref, watch } from 'vue';
-import axios from 'axios';
+import { computed, ref, watch } from 'vue'
+import axios from 'axios'
 
 const currencies = ref([
+  { code: 'EUR', name: 'Euro' },
+  { code: 'GBP', name: 'Pound Sterling' },
+  { code: 'USD', name: 'US Dollar' },
+  { code: 'DKK', name: 'Danish Krone' },
+  { code: 'NOK', name: 'Norwegian Krone' },
+  { code: 'SEK', name: 'Swedish Krona' },
+  { code: 'PLN', name: 'Zloty' },
+  { code: 'HUF', name: 'Forint' },
+  { code: 'CZK', name: 'Czech Koruna' },
+  { code: 'CHF', name: 'Swiss Franc' },
+  { code: 'CAD', name: 'Canadian Dollar' },
+  { code: 'ISK', name: 'Iceland Krona' },
   { code: 'AED', name: 'UAE Dirham' },
   { code: 'AFN', name: 'Afghani' },
   { code: 'ALL', name: 'Lek' },
@@ -17,28 +29,21 @@ const currencies = ref([
   { code: 'BOB', name: 'Boliviano' },
   { code: 'BRL', name: 'Brazilian Real' },
   { code: 'BYN', name: 'Belarusian Ruble' },
-  { code: 'CAD', name: 'Canadian Dollar' },
-  { code: 'CHF', name: 'Swiss Franc' },
   { code: 'CLP', name: 'Chilean Peso' },
   { code: 'CNY', name: 'Yuan Renminbi' },
   { code: 'COP', name: 'Colombian Peso' },
-  { code: 'CZK', name: 'Czech Koruna' },
   { code: 'DJF', name: 'Djibouti Franc' },
-  { code: 'DKK', name: 'Danish Krone' },
   { code: 'DZD', name: 'Algerian Dinar' },
   { code: 'EGP', name: 'Egyptian Pound' },
   { code: 'ETB', name: 'Ethiopian Birr' },
-  { code: 'GBP', name: 'Pound Sterling' },
   { code: 'GEL', name: 'Lari' },
   { code: 'GNF', name: 'Guinean Franc' },
   { code: 'HKD', name: 'Hong Kong Dollar' },
-  { code: 'HUF', name: 'Forint' },
   { code: 'IDR', name: 'Rupiah' },
   { code: 'ILS', name: 'New Israeli Sheqel' },
   { code: 'INR', name: 'Indian Rupee' },
   { code: 'IQD', name: 'Iraqi Dinar' },
   { code: 'IRR', name: 'Iranian Rial' },
-  { code: 'ISK', name: 'Iceland Krona' },
   { code: 'JOD', name: 'Jordanian Dinar' },
   { code: 'JPY', name: 'Yen' },
   { code: 'KES', name: 'Kenyan Shilling' },
@@ -57,19 +62,16 @@ const currencies = ref([
   { code: 'MXN', name: 'Mexican Peso' },
   { code: 'MYR', name: 'Malaysian Ringgit' },
   { code: 'MZN', name: 'Mozambique Metical' },
-  { code: 'NOK', name: 'Norwegian Krone' },
   { code: 'NZD', name: 'New Zealand Dollar' },
   { code: 'PAB', name: 'Balboa' },
   { code: 'PEN', name: 'Sol' },
   { code: 'PHP', name: 'Philippine Peso' },
   { code: 'PKR', name: 'Pakistan Rupee' },
-  { code: 'PLN', name: 'Zloty' },
   { code: 'QAR', name: 'Qatari Rial' },
   { code: 'RON', name: 'Romanian Leu' },
   { code: 'RSD', name: 'Serbian Dinar' },
   { code: 'RUB', name: 'Russian Ruble' },
   { code: 'SAR', name: 'Saudi Riyal' },
-  { code: 'SEK', name: 'Swedish Krona' },
   { code: 'SGD', name: 'Singapore Dollar' },
   { code: 'SYP', name: 'Syrian Pound' },
   { code: 'THB', name: 'Baht' },
@@ -80,7 +82,6 @@ const currencies = ref([
   { code: 'TWD', name: 'New Taiwan Dollar' },
   { code: 'TZS', name: 'Tanzanian Shilling' },
   { code: 'UAH', name: 'Hryvnia' },
-  { code: 'USD', name: 'US Dollar' },
   { code: 'UYU', name: 'Peso Uruguayo' },
   { code: 'UZS', name: 'Uzbekistan Sum' },
   { code: 'VES', name: 'Bolívar Soberano' },
@@ -89,26 +90,36 @@ const currencies = ref([
   { code: 'XOF', name: 'CFA Franc BCEAO' },
   { code: 'YER', name: 'Yemeni Rial' },
   { code: 'ZAR', name: 'Rand' }
-]);
+])
 
 const conversionRequest = ref({
   fromCurrency: '',
   toCurrency: '',
   amount: null
-});
+})
 
-const conversionResult = ref(null);
+const conversionResult = ref(null)
 
 const convertCurrency = async () => {
-  try {
-    const response = await axios.post('http://localhost:8080/api/convert', conversionRequest.value);
-    conversionResult.value = response.data.convertedAmount;
-  } catch (error) {
-    console.error('Error converting currency:', error);
+  if (conversionRequest.value.fromCurrency && conversionRequest.value.toCurrency && conversionRequest.value.amount && conversionRequest.value.fromCurrency !== conversionRequest.value.toCurrency) {
+    try {
+      const response = await axios.post('http://localhost:8080/api/convert', conversionRequest.value)
+      conversionResult.value = response.data
+    } catch (error) {
+      console.error('Error converting currency:', error)
+    }
   }
-};
+}
 
-watch(conversionRequest, convertCurrency, { deep: true });
+const isEuroInvolved = computed(() => {
+  return conversionRequest.value.fromCurrency === 'EUR' || conversionRequest.value.toCurrency === 'EUR';
+});
+
+watch(conversionRequest, () => {
+  if (conversionRequest.value.fromCurrency && conversionRequest.value.toCurrency && conversionRequest.value.amount) {
+    convertCurrency();
+  }
+}, { deep: true });
 
 </script>
 
@@ -141,14 +152,18 @@ watch(conversionRequest, convertCurrency, { deep: true });
       <div class="row mt-3">
         <div class="col-md-6">
           <div class="form-group">
-            <label for="amount">Amount:</label>
+            <label for="amount">Amount to be converted:</label>
             <input v-model="conversionRequest.amount" type="number" id="amount" class="form-control" required>
           </div>
         </div>
       </div>
     </form>
     <div v-if="conversionResult !== null" class="mt-4">
-      <h2>Converted Amount: {{ conversionResult }}</h2>
+      <h2>Converted Amount: {{ conversionResult.convertedAmount.toFixed(5) }} {{conversionRequest.toCurrency}}</h2>
+      <p v-if="!isEuroInvolved">From {{conversionRequest.fromCurrency}} to EUR Currency Rate: {{ conversionResult.fromCurrencyRate }}</p>
+      <p v-if="!isEuroInvolved">From EUR to {{conversionRequest.toCurrency}} Currency Rate: {{ conversionResult.toCurrencyRate }}</p>
+      <p v-else-if="conversionRequest.fromCurrency === 'EUR'">From EUR to {{conversionRequest.toCurrency}} Currency Rate: {{ conversionResult.toCurrencyRate }}</p>
+      <p v-else>From {{conversionRequest.fromCurrency}} to EUR Currency Rate: {{ conversionResult.fromCurrencyRate }}</p>
     </div>
   </div>
 </template>
@@ -159,13 +174,4 @@ watch(conversionRequest, convertCurrency, { deep: true });
   margin: auto;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-}
-
-button {
-  height: 100%;
-  margin-top: 20px;
-}
 </style>
