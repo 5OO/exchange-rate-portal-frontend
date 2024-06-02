@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import axios from 'axios';
 
 const currencies = ref([
@@ -107,6 +107,9 @@ const convertCurrency = async () => {
     console.error('Error converting currency:', error);
   }
 };
+
+watch(conversionRequest, convertCurrency, { deep: true });
+
 </script>
 
 <template>
@@ -141,9 +144,6 @@ const convertCurrency = async () => {
             <label for="amount">Amount:</label>
             <input v-model="conversionRequest.amount" type="number" id="amount" class="form-control" required>
           </div>
-        </div>
-        <div class="col-md-6 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary w-100">Convert</button>
         </div>
       </div>
     </form>
