@@ -1,16 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
+import { useRoute } from 'vue-router'
 
-const route = useRoute();
-const currency = route.params.currency;
-const exchangeRates = ref([]);
-const currencyName = ref('');
-const currencyLocation = ref('');
-const currentPage = ref(0);
-const pageSize = ref(250);
-const totalPages = ref(0);
+const route = useRoute()
+const currency = route.params.currency
+const exchangeRates = ref([])
+const currencyName = ref('')
+const currencyLocation = ref('')
+const currentPage = ref(0)
+const pageSize = ref(250)
+const totalPages = ref(0)
 
 const fetchRates = async (page, size) => {
   try {
@@ -19,39 +19,42 @@ const fetchRates = async (page, size) => {
         page,
         size
       }
-    });
-    exchangeRates.value = response.data.content;
-    totalPages.value = response.data.totalPages;
+    })
+
+    const data = response.data._embedded.exchangeRateDTOList
+    exchangeRates.value = data
+    totalPages.value = response.data.page.totalPages
 
     if (exchangeRates.value.length > 0) {
-      currencyName.value = exchangeRates.value[0].currencyName;
-      currencyLocation.value = exchangeRates.value[0].entityLocation;
+      currencyName.value = exchangeRates.value[0].currencyName
+      currencyLocation.value = exchangeRates.value[0].entityLocation
     }
   } catch (error) {
-    console.error("Error fetching exchange rates history:", error);
+    console.error('Error fetching exchange rates history:', error)
   }
-};
+}
 
 onMounted(() => {
-  fetchRates(currentPage.value, pageSize.value);
-});
+  fetchRates(currentPage.value, pageSize.value)
+})
 
 const goToPage = (page) => {
   if (page >= 0 && page < totalPages.value) {
-    currentPage.value = page;
-    fetchRates(currentPage.value, pageSize.value);
+    currentPage.value = page
+    fetchRates(currentPage.value, pageSize.value)
   }
-};
+}
 
 const formatRate = (rate) => {
-  return rate.toFixed(4);
-};
+  return rate.toFixed(4)
+}
 </script>
 
 <template>
   <main class="container mt-5">
     <h1 class="mb-4">Exchange Rate History for {{ currency }}</h1>
-    <p>The exchange rates of the euro against foreign currencies of the European Central Bank (included in database since 30/09/2014) are presented according to their announcement date.</p>
+    <p>The exchange rates of the euro against foreign currencies of the European Central Bank (included in database
+      since 30/09/2014) are presented according to their announcement date.</p>
     <div v-if="exchangeRates.length">
       <p>Currency name: {{ currencyName }}</p>
       <p>Currency location: {{ currencyLocation }}</p>
@@ -74,9 +77,10 @@ const formatRate = (rate) => {
         </tbody>
       </table>
       <div class="pagination">
-        <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 0">Previous</button>
-        <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-        <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages - 1">Next</button>
+        <button @click="goToPage(currentPage.value - 1)" :disabled="currentPage.value === 0">Previous</button>
+        <span>Page {{ currentPage.value + 1 }} of {{ totalPages }}</span>
+        <button @click="goToPage(currentPage.value + 1)" :disabled="currentPage.value === totalPages.value - 1">Next
+        </button>
       </div>
     </div>
     <div v-else>
@@ -91,7 +95,6 @@ const formatRate = (rate) => {
   justify-content: center;
   margin-top: 20px;
 }
-
 
 .pagination button {
   margin: 0 5px;
