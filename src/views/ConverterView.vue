@@ -2,45 +2,51 @@
 import { ref } from 'vue';
 import axios from 'axios';
 
-const amount = ref(0);
-const selectedCurrency = ref('');
-const convertedAmount = ref(null);
+const conversionRequest = ref({
+  fromCurrency: '',
+  toCurrency: '',
+  amount: null
+});
 
-const currencies = ['USD', 'EUR', 'GBP']; // Add more as needed
+const convertedAmount = ref(null);
 
 const convertCurrency = async () => {
   try {
-    const response = await axios.get(`/api/exchange-rates?currency=${selectedCurrency.value}`);
-    const rate = response.data.rate;
-    convertedAmount.value = amount.value * rate;
+    const response = await axios.post('http://localhost:8080/api/convert', conversionRequest.value);
+    convertedAmount.value = response.data.convertedAmount;
   } catch (error) {
-    console.error("Error converting currency:", error);
+    console.error('Error converting currency:', error);
   }
 };
 </script>
 
 <template>
   <div class="container mt-5">
-    <h1 class="mb-4">Currency Calculator</h1>
+    <h1 class="mb-4">Currency Converter</h1>
     <form @submit.prevent="convertCurrency">
-      <div class="mb-3">
-        <label for="amount" class="form-label">Amount</label>
-        <input type="number" id="amount" v-model="amount" class="form-control" required />
+      <div class="form-group">
+        <label for="fromCurrency">From Currency:</label>
+        <input v-model="conversionRequest.fromCurrency" type="text" id="fromCurrency" class="form-control" required>
       </div>
-      <div class="mb-3">
-        <label for="currency" class="form-label">Currency</label>
-        <select id="currency" v-model="selectedCurrency" class="form-select" required>
-          <option v-for="currency in currencies" :key="currency" :value="currency">{{ currency }}</option>
-        </select>
+      <div class="form-group">
+        <label for="toCurrency">To Currency:</label>
+        <input v-model="conversionRequest.toCurrency" type="text" id="toCurrency" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input v-model="conversionRequest.amount" type="number" id="amount" class="form-control" required>
       </div>
       <button type="submit" class="btn btn-primary">Convert</button>
     </form>
     <div v-if="convertedAmount !== null" class="mt-4">
-      <p>Converted Amount: {{ convertedAmount }}</p>
+      <h2>Converted Amount: {{ convertedAmount }}</h2>
     </div>
   </div>
 </template>
 
 <style scoped>
-
+.container {
+  max-width: 600px;
+  margin: auto;
+}
 </style>
