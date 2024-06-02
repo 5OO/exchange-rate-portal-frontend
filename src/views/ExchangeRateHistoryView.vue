@@ -22,10 +22,9 @@ const fetchRates = async (page, size) => {
         size
       }
     })
-
-    const data = response.data._embedded.exchangeRateDTOList
-    exchangeRates.value = data
+    exchangeRates.value = response.data._embedded.exchangeRateDTOList
     totalPages.value = response.data.page.totalPages
+    currentPage.value = response.data.page.number
 
     if (exchangeRates.value.length > 0) {
       currencyName.value = exchangeRates.value[0].currencyName
@@ -88,9 +87,9 @@ const formatRate = (rate) => {
           </tbody>
         </table>
         <div class="pagination">
-          <button @click="goToPage(currentPage.value - 1)" :disabled="currentPage.value === 0">Previous</button>
-          <span>Page {{ currentPage.value + 1 }} of {{ totalPages }}</span>
-          <button @click="goToPage(currentPage.value + 1)" :disabled="currentPage.value === totalPages.value - 1">Next
+          <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 0">Previous</button>
+          <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+          <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages - 1">Next
           </button>
         </div>
       </div>
@@ -106,6 +105,7 @@ const formatRate = (rate) => {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .pagination button {
