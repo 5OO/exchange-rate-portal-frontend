@@ -15,17 +15,21 @@ This is the frontend for the Exchange Rate Portal, a web application that provid
 1. **Home View**:
     - Displays the latest exchange rates fetched from the Bank of Lithuania.
     - Provides links to view historical exchange rates for each currency.
-![Screenshot 2024-06-03 at 01.57.59.png](..%2F..%2F..%2F..%2FUsers%2FKristi%2FDocuments%2Fekraanit%C3%B5mmis%2FScreenshot%202024-06-03%20at%2001.57.59.png)
+![Screenshot 2024-06-03 at 07 18 48](https://github.com/5OO/exchange-rate-portal-frontend/assets/27925052/d9825105-90bd-415d-b990-edb87aafe4ca)
+
 2. **Exchange Rate History View**:
     - Displays the historical exchange rates for a selected currency.
     - Supports pagination for easy navigation through historical data.
-![Screenshot 2024-06-03 at 01.58.20.png](..%2F..%2F..%2F..%2FUsers%2FKristi%2FDocuments%2Fekraanit%C3%B5mmis%2FScreenshot%202024-06-03%20at%2001.58.20.png)
+![Screenshot 2024-06-03 at 07 19 12](https://github.com/5OO/exchange-rate-portal-frontend/assets/27925052/19cf5cb7-7b14-4f5c-9656-86687262bd7a)
+
 3. **Currency Converter View**:
     - Allows users to enter an amount and select currencies to convert between.
     - Displays the converted amount using the latest exchange rates.
-![Screenshot 2024-06-03 at 02.15.04.png](..%2F..%2F..%2F..%2FUsers%2FKristi%2FDocuments%2Fekraanit%C3%B5mmis%2FScreenshot%202024-06-03%20at%2002.15.04.png)
+![Screenshot 2024-06-03 at 07 19 26](https://github.com/5OO/exchange-rate-portal-frontend/assets/27925052/6c9e9a21-a54f-462a-b37e-93637fe76284)
 
-    - ![Screenshot 2024-06-03 at 01.59.11.png](..%2F..%2F..%2F..%2FUsers%2FKristi%2FDocuments%2Fekraanit%C3%B5mmis%2FScreenshot%202024-06-03%20at%2001.59.11.png)
+![Screenshot 2024-06-03 at 07 19 51](https://github.com/5OO/exchange-rate-portal-frontend/assets/27925052/72033802-6622-47b2-890d-d4bd865365d0)
+
+    
 ## Getting Started
 
 ### Prerequisites
